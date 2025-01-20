@@ -13,7 +13,6 @@ const connectDatabase = require("./db/DataBase");
 const app = express();
 const port = 5000;
 
-// Connect to the database
 connectDatabase();
 
 app.get("/", (req, res) => {

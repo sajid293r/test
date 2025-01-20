@@ -12,15 +12,18 @@ const port = 5000;
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST, 
     port: process.env.SMTP_PORT,
-    secure: false, 
+    secure: process.env.SMTP_PORT == 465, // true for port 465, false for other ports
+    requireTLS: true, 
     auth: {
         user: process.env.SMTP_USER, 
         pass: process.env.SMTP_PASS  
-    }
+    },
+    logger: true, // Enable logging
+    debug: true   // Enable debug output
 });
 
-// Replace 'mongodb://localhost:27017/emailScheduler' with your MongoDB Atlas connection string
-mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0', {
+// Update the connection string with your database name
+mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -43,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.post('/scheduleEmail', async (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     const { from, to, subject, text, sendAt, gap } = req.body;
     const uniqueId = uuidv4();
     const email = new Email({ from, to, subject, text, sendAt });

@@ -19,7 +19,8 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-mongoose.connect('mongodb://localhost:27017/emailScheduler', {
+// Replace 'mongodb://localhost:27017/emailScheduler' with your MongoDB Atlas connection string
+mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

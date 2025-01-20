@@ -12,7 +12,7 @@ const port = 5000;
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST, 
     port: process.env.SMTP_PORT,
-    secure: true, 
+    secure: false, 
     auth: {
         user: process.env.SMTP_USER, 
         pass: process.env.SMTP_PASS  
@@ -57,25 +57,17 @@ app.post('/scheduleEmail', async (req, res) => {
             subject,
             text
         };
-    
-        let attempts = 0;
-        const maxAttempts = 3;
-    
-        while (attempts < maxAttempts) {
+
+        setTimeout(async () => {
             try {
                 await transporter.sendMail(message);
                 console.log('Email sent to', recipient);
-                break;
             } catch (error) {
-                attempts++;
                 console.error('Error sending email to', recipient, ':', error.message);
-                if (attempts < maxAttempts) {
-                    setTimeout(() => sendEmail(recipient, delay), 5000);
-                }
             }
-        }
+        }, delay);
     };
-    
+
     const recipients = Array.isArray(to) ? to.map(email => email.trim()) : [to.trim()];
     let delay = 0;
 

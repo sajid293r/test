@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
-const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = 5000;
@@ -12,7 +11,7 @@ const port = 5000;
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST, 
     port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_PORT == 465, // true for port 465, false for other ports
+    secure: process.env.SMTP_PORT, // true for port 465, false for other ports
     requireTLS: true, 
     auth: {
         user: process.env.SMTP_USER, 
@@ -48,7 +47,6 @@ app.get("/", (req, res) => {
 app.post('/scheduleEmail', async (req, res) => {
     console.log(req.body);
     const { from, to, subject, text, sendAt, gap } = req.body;
-    const uniqueId = uuidv4();
     const email = new Email({ from, to, subject, text, sendAt });
 
     await email.save();

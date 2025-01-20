@@ -8,7 +8,7 @@ const emailRoutes = require('./routes/emailRoutes');
 const app = express();
 const port = 5000;
 
-mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     connectTimeoutMS: 30000, // Increase connection timeout

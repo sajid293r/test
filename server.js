@@ -11,14 +11,13 @@ const port = 5000;
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST, 
     port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_PORT, // true for port 465, false for other ports
+    secure: process.env.SMTP_PORT == 465, // true for port 465, false for other ports
     requireTLS: true, 
     auth: {
         user: process.env.SMTP_USER, 
         pass: process.env.SMTP_PASS  
     },
-    logger: true, // Enable logging
-    debug: true   // Enable debug output
+
 });
 
 // Update the connection string with your database name

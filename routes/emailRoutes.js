@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
 
 router.post('/scheduleEmail', async (req, res) => {
     console.log(req.body);
-    const { from, to, subject, text, sendAt, gap } = req.body;
-    const email = new Email({ from, to, subject, text, sendAt, gap });
+    const { from, to, subject, text: html, sendAt, gap } = req.body;
+    const email = new Email({ from, to, subject, text: html, sendAt, gap });
 
     await email.save();
 
@@ -18,7 +18,7 @@ router.post('/scheduleEmail', async (req, res) => {
     let delay = 0;
 
     for (const recipient of recipients) {
-        sendEmail(from, recipient, subject, text, delay);
+        sendEmail(from, recipient, subject, html, delay); 
         delay += gap * 60000;
     }
 

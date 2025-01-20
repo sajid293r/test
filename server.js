@@ -21,8 +21,11 @@ const transporter = nodemailer.createTransport({
 
 mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    connectTimeoutMS: 30000, // Increase connection timeout
+    socketTimeoutMS: 30000 // Increase socket timeout
 });
+
 
 app.use(bodyParser.json());
 app.use(cors());

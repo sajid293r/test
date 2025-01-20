@@ -17,10 +17,8 @@ const transporter = nodemailer.createTransport({
         user: process.env.SMTP_USER, 
         pass: process.env.SMTP_PASS  
     },
-
 });
 
-// Update the connection string with your database name
 mongoose.connect('mongodb+srv://user123:user123@cluster0.unkh6.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true

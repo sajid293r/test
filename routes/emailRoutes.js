@@ -64,6 +64,11 @@ router.post('/scanEmails', async (req, res) => {
 router.post('/scheduleEmail', async (req, res) => {
     console.log(req.body);
     const { from, to, subject, text: html, sendAt, gap } = req.body;
+
+    if (!to) {
+        return res.status(400).json({ error: 'No email addresses provided' });
+    }
+
     const email = new Email({ from, to, subject, text: html, sendAt, gap });
 
     await email.save();
@@ -72,11 +77,11 @@ router.post('/scheduleEmail', async (req, res) => {
     let delay = 0;
 
     for (const recipient of recipients) {
-        sendEmail(from, recipient, subject, html, delay); 
+        sendEmail(from, recipient, subject, html, delay);
         delay += gap * 60000;
     }
 
-    res.send('Email scheduled successfully');
+    res.status(200).json({ message: 'Email scheduled successfully' });
 });
 
-module.exports = router;
+smodule.exports = router;

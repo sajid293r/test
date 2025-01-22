@@ -20,7 +20,14 @@ app.get("/", (req, res) => {
 });
 
 app.use(bodyParser.json());
+<<<<<<< HEAD
 app.use(cors());
+=======
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+>>>>>>> dcc1f05ce550a4c63aeffa7073ec896534f68168
 app.use('/api', emailRoutes);
 
 app.listen(port, () => {

@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const dns = require('dns');
 const util = require('util');
@@ -85,3 +85,38 @@ router.post('/scheduleEmail', async (req, res) => {
 });
 
 smodule.exports = router;
+ */
+
+const express = require('express');
+const router = express.Router();
+const dns = require('dns');
+const Email = require('../model/Email');
+const sendEmail = require('../services/sendMail');
+
+router.get("/", (req, res) => {
+    res.send("Server is Running");
+});
+
+router.post('/scheduleEmail', async (req, res) => {
+    console.log(req.body);
+    const { from, to, subject, text: html, sendAt, gap } = req.body;
+
+    if (!to) {
+        return res.status(400).json({ error: 'No email addresses provided' });
+    }
+
+    const email = new Email({ from, to, subject, text: html, sendAt, gap });
+    await email.save();
+
+    const recipients = Array.isArray(to) ? to.map(email => email.trim()) : [to.trim()];
+    let delay = 0;
+
+    for (const recipient of recipients) {
+        sendEmail(from, recipient, subject, html, delay);
+        delay += gap * 60000;
+    }
+
+    res.status(200).json({ message: 'Email scheduled successfully' });
+});
+
+module.exports = router;

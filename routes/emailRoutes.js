@@ -1,14 +1,15 @@
 const express = require('express');
-const router = express.Router();
 const dns = require('dns');
 const Email = require('../model/Email');
 const sendEmail = require('../services/sendMail');
 
+const router = express.Router();
+
 router.get("/", (req, res) => {
     res.send("Server is Running");
 });
+
 router.post('/scanEmails', async (req, res) => {
-    console.log(req.body);
     const { to } = req.body;
 
     if (!to) {
@@ -26,15 +27,14 @@ router.post('/scanEmails', async (req, res) => {
                 reject(new Error('DNS resolution timeout'));
             }, 5000); // 5-second timeout
 
-            resolveMx(domain)
-                .then(addresses => {
-                    clearTimeout(timeout);
-                    resolve(addresses);
-                })
-                .catch(err => {
-                    clearTimeout(timeout);
+            dns.resolveMx(domain, (err, addresses) => {
+                clearTimeout(timeout);
+                if (err) {
                     reject(err);
-                });
+                } else {
+                    resolve(addresses);
+                }
+            });
         });
     };
 
@@ -43,25 +43,24 @@ router.post('/scanEmails', async (req, res) => {
             const domain = recipient.split('@')[1];
             try {
                 const addresses = await resolveWithTimeout(domain);
+                console.log(`Resolved addresses for ${domain}: ${JSON.stringify(addresses)}`);
                 if (addresses && addresses.length > 0) {
-                    console.log(`Valid email domain: ${domain}`);
                     validEmails.push(recipient);
                 } else {
-                    console.log(`Invalid email domain: ${domain}`);
                     invalidEmails.push(recipient);
                 }
             } catch (err) {
-                console.log(`Invalid email domain: ${domain}`);
+                console.log(`Error resolving ${domain}: ${err.message}`);
                 invalidEmails.push(recipient);
             }
         } else {
-            console.log(`Invalid email address format: ${recipient}`);
             invalidEmails.push(recipient);
         }
     }));
 
     res.json({ validEmails, invalidEmails });
 });
+
 router.post('/scheduleEmail', async (req, res) => {
     console.log(req.body);
     const { from, to, subject, text: html, sendAt, gap } = req.body;

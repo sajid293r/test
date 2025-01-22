@@ -20,10 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'https://email-schedular-frontend-eight.vercel.app',
-  credentials: true
-}));
+app.use(cors());
 app.use('/api', emailRoutes);
 
 app.listen(port, () => {

@@ -39,8 +39,9 @@ const sendEmail = (from, to, subject, html, delay) => {
     setTimeout(() => {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com', // Replace with your SMTP server
+            service:"gmail",
             port: 587, // Replace with your SMTP server port
-            secure: false, // Use true for 465, false for other ports
+            secure: true, // Use true for 465, false for other ports
             auth: {
                 user: 'danialhamza.bytecraft@gmail.com', // Replace with your email
                 pass: 'ypdi wdqk ekln fldw', // Replace with your email password
